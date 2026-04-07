@@ -1,6 +1,0 @@
-{
-  "parent": "cluttered:block/balustrade",
-  "textures": {
-    "2": "cluttered:block/marble_balustrade"
-  }
-}

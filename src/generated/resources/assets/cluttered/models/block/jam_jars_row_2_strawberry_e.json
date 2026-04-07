@@ -1,6 +1,0 @@
-{
-  "parent": "cluttered:block/jam_jar_row_2",
-  "textures": {
-    "0": "cluttered:block/jam_jar_mini_strawberry"
-  }
-}

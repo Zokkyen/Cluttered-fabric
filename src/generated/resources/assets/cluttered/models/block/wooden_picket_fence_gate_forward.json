@@ -1,7 +1,0 @@
-{
-  "parent": "cluttered:block/picket_fence_gate_open_forwards",
-  "textures": {
-    "1": "cluttered:block/wooden_picket_fence_gate",
-    "particle": "cluttered:block/wooden_picket_fence_gate"
-  }
-}

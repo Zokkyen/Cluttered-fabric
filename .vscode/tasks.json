@@ -1,0 +1,127 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "compile-java-verify",
+			"type": "shell",
+			"command": ".\\gradlew.bat",
+			"args": [
+				"compileJava",
+				"--console=plain"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "build-verify",
+			"type": "shell",
+			"command": ".\\gradlew.bat",
+			"args": [
+				"build",
+				"--console=plain"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "compile-java-after-import-fix",
+			"type": "shell",
+			"command": ".\\gradlew.bat",
+			"args": [
+				"compileJava",
+				"--console=plain"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "compile-java-after-render-fix",
+			"type": "shell",
+			"command": ".\\gradlew.bat",
+			"args": [
+				"compileJava",
+				"--console=plain"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "build-and-check-jar",
+			"type": "shell",
+			"command": ".\\gradlew.bat",
+			"args": [
+				"build",
+				"--console=plain"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "compile-java-warnings-check",
+			"type": "shell",
+			"command": ".\\gradlew.bat",
+			"args": [
+				"compileJava",
+				"--console=plain"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "compile-java-warnings-check-2",
+			"type": "shell",
+			"command": ".\\gradlew.bat",
+			"args": [
+				"compileJava",
+				"--console=plain"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "build-after-creative-tab-fix",
+			"type": "shell",
+			"command": ".\\gradlew.bat",
+			"args": [
+				"build",
+				"--console=plain"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "build-warning-mode-all",
+			"type": "shell",
+			"command": ".\\gradlew.bat",
+			"args": [
+				"build",
+				"--console=plain",
+				"--warning-mode",
+				"all"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "final-build-after-crash-fix",
+			"type": "shell",
+			"command": ".\\gradlew.bat",
+			"args": [
+				"build",
+				"--console=plain"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "compile-after-jukebox-fix",
+			"type": "shell",
+			"command": ".\\gradlew.bat",
+			"args": [
+				"compileJava",
+				"--console=plain"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "build-after-jukebox-runtime-fix",
+			"type": "shell",
+			"command": ".\\gradlew.bat",
+			"args": [
+				"build",
+				"--console=plain"
+			],
+			"isBackground": false
+		}
+	]
+}

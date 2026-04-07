@@ -1,0 +1,60 @@
+package net.redchujelly.cluttered.fabric;
+
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.HangingSignRenderer;
+import net.minecraft.client.renderer.blockentity.SignRenderer;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.redchujelly.cluttered.fabric.client.ChairEntityRenderer;
+
+public final class ClutteredFabricClient implements ClientModInitializer {
+    @Override
+    public void onInitializeClient() {
+        registerChairRenderer();
+        registerBlockEntityRenderer("cluttered_sign", SignRenderer::new);
+        registerBlockEntityRenderer("cluttered_hanging_sign", HangingSignRenderer::new);
+
+        ClutteredFabric.LOGGER.info("Cluttered Fabric client bootstrap initialized");
+    }
+
+    private static void registerChairRenderer() {
+        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(ClutteredFabric.MODID, "chair_entity");
+        if (!BuiltInRegistries.ENTITY_TYPE.containsKey(id)) {
+            ClutteredFabric.LOGGER.warn("Skipping chair renderer registration, missing entity type: {}", id);
+            return;
+        }
+
+        EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(id);
+        registerChairRendererUnchecked(entityType);
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static void registerChairRendererUnchecked(EntityType<?> entityType) {
+        EntityRendererRegistry.register((EntityType) entityType, ChairEntityRenderer::new);
+    }
+
+    private static <T extends BlockEntity> void registerBlockEntityRenderer(String path, BlockEntityRendererProvider<T> provider) {
+        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(ClutteredFabric.MODID, path);
+        if (!BuiltInRegistries.BLOCK_ENTITY_TYPE.containsKey(id)) {
+            ClutteredFabric.LOGGER.warn("Skipping block entity renderer registration, missing type: {}", id);
+            return;
+        }
+
+        BlockEntityType<?> blockEntityType = BuiltInRegistries.BLOCK_ENTITY_TYPE.get(id);
+        registerBlockEntityRendererUnchecked(blockEntityType, provider);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends BlockEntity> void registerBlockEntityRendererUnchecked(
+            BlockEntityType<?> blockEntityType,
+            BlockEntityRendererProvider<T> provider
+    ) {
+        BlockEntityRenderers.register((BlockEntityType<? extends T>) blockEntityType, provider);
+    }
+}
