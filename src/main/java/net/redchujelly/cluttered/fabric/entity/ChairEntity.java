@@ -7,8 +7,11 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import javax.annotation.Nonnull;
+
+import java.util.Objects;
 
 public class ChairEntity extends Entity {
     private final BlockPos chairPos;
@@ -51,10 +54,13 @@ public class ChairEntity extends Entity {
 
     @Override
     public void kill() {
-        BlockState chair = chairLevel.getBlockState(chairPos);
-        if (chair.hasProperty(BlockStateProperties.OCCUPIED)) {
+        BlockPos position = Objects.requireNonNull(chairPos, "chair position");
+        BooleanProperty occupiedProperty = Objects.requireNonNull(BlockStateProperties.OCCUPIED, "occupied property");
+        BlockState chair = chairLevel.getBlockState(position);
+        if (chair.hasProperty(occupiedProperty)) {
             this.teleportTo(this.getX(), this.getY() + 0.5f, this.getZ());
-            chairLevel.setBlock(chairPos, chair.setValue(BlockStateProperties.OCCUPIED, false), 2);
+            BlockState unoccupiedChair = chair.setValue(occupiedProperty, false);
+            chairLevel.setBlock(position, Objects.requireNonNull(unoccupiedChair, "unoccupied chair state"), 2);
         }
         super.kill();
     }

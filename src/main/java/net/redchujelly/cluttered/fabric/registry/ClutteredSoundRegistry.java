@@ -6,6 +6,8 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.core.Registry;
 import net.redchujelly.cluttered.fabric.ClutteredFabric;
 
+import java.util.Objects;
+
 public final class ClutteredSoundRegistry {
     public static final SoundEvent POLAROID_FLASH = registerVariableRange("polaroid_flash");
 
@@ -17,7 +19,12 @@ public final class ClutteredSoundRegistry {
     }
 
     private static SoundEvent registerVariableRange(String path) {
-        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(ClutteredFabric.MODID, path);
-        return Registry.register(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id));
+        String safePath = Objects.requireNonNull(path, "path");
+        ResourceLocation id = Objects.requireNonNull(
+                ResourceLocation.fromNamespaceAndPath(Objects.requireNonNull(ClutteredFabric.MODID, "mod id"), safePath),
+                "sound id"
+        );
+        SoundEvent soundEvent = Objects.requireNonNull(SoundEvent.createVariableRangeEvent(id), "sound event");
+        return Registry.register(Objects.requireNonNull(BuiltInRegistries.SOUND_EVENT, "sound event registry"), id, soundEvent);
     }
 }

@@ -13,6 +13,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.redchujelly.cluttered.fabric.client.ChairEntityRenderer;
 
+import java.util.Objects;
+
 public final class ClutteredFabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
@@ -24,30 +26,30 @@ public final class ClutteredFabricClient implements ClientModInitializer {
     }
 
     private static void registerChairRenderer() {
-        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(ClutteredFabric.MODID, "chair_entity");
-        if (!BuiltInRegistries.ENTITY_TYPE.containsKey(id)) {
+        ResourceLocation id = createId("chair_entity");
+        if (!Objects.requireNonNull(BuiltInRegistries.ENTITY_TYPE, "entity type registry").containsKey(Objects.requireNonNull(id, "chair entity id"))) {
             ClutteredFabric.LOGGER.warn("Skipping chair renderer registration, missing entity type: {}", id);
             return;
         }
 
-        EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(id);
+        EntityType<?> entityType = Objects.requireNonNull(BuiltInRegistries.ENTITY_TYPE.get(Objects.requireNonNull(id, "chair entity id")), "chair entity type");
         registerChairRendererUnchecked(entityType);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     private static void registerChairRendererUnchecked(EntityType<?> entityType) {
-        EntityRendererRegistry.register((EntityType) entityType, ChairEntityRenderer::new);
+        EntityRendererRegistry.register((EntityType) Objects.requireNonNull(entityType, "entity type"), ChairEntityRenderer::new);
     }
 
     private static <T extends BlockEntity> void registerBlockEntityRenderer(String path, BlockEntityRendererProvider<T> provider) {
-        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(ClutteredFabric.MODID, path);
-        if (!BuiltInRegistries.BLOCK_ENTITY_TYPE.containsKey(id)) {
+        ResourceLocation id = createId(path);
+        if (!Objects.requireNonNull(BuiltInRegistries.BLOCK_ENTITY_TYPE, "block entity type registry").containsKey(Objects.requireNonNull(id, "block entity type id"))) {
             ClutteredFabric.LOGGER.warn("Skipping block entity renderer registration, missing type: {}", id);
             return;
         }
 
-        BlockEntityType<?> blockEntityType = BuiltInRegistries.BLOCK_ENTITY_TYPE.get(id);
-        registerBlockEntityRendererUnchecked(blockEntityType, provider);
+        BlockEntityType<?> blockEntityType = Objects.requireNonNull(BuiltInRegistries.BLOCK_ENTITY_TYPE.get(Objects.requireNonNull(id, "block entity type id")), "block entity type");
+        registerBlockEntityRendererUnchecked(blockEntityType, Objects.requireNonNull(provider, "renderer provider"));
     }
 
     @SuppressWarnings("unchecked")
@@ -55,6 +57,16 @@ public final class ClutteredFabricClient implements ClientModInitializer {
             BlockEntityType<?> blockEntityType,
             BlockEntityRendererProvider<T> provider
     ) {
-        BlockEntityRenderers.register((BlockEntityType<? extends T>) blockEntityType, provider);
+        BlockEntityRenderers.register(
+                (BlockEntityType<? extends T>) Objects.requireNonNull(blockEntityType, "block entity type"),
+                Objects.requireNonNull(provider, "renderer provider")
+        );
+    }
+
+    private static ResourceLocation createId(String path) {
+        return Objects.requireNonNull(
+                ResourceLocation.fromNamespaceAndPath(Objects.requireNonNull(ClutteredFabric.MODID, "mod id"), Objects.requireNonNull(path, "path")),
+                "resource location"
+        );
     }
 }

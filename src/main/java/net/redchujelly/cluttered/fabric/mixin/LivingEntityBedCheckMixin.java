@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Mixin(LivingEntity.class)
@@ -22,8 +23,9 @@ public abstract class LivingEntityBedCheckMixin {
             return;
         }
 
-        BlockState state = self.level().getBlockState(sleepingPos.get());
-        if (state.is(BlockTags.BEDS)) {
+        BlockPos bedPos = Objects.requireNonNull(sleepingPos.get(), "sleeping block position");
+        BlockState state = self.level().getBlockState(bedPos);
+        if (state.is(Objects.requireNonNull(BlockTags.BEDS, "beds tag"))) {
             cir.setReturnValue(true);
         }
     }

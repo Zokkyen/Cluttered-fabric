@@ -11,6 +11,7 @@ import net.neoforged.bus.api.IEventBus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public class DeferredRegister<T> {
@@ -56,7 +57,13 @@ public class DeferredRegister<T> {
     }
 
     protected final ResourceLocation id(String name) {
-        return ResourceLocation.fromNamespaceAndPath(namespace, name);
+        return Objects.requireNonNull(
+            ResourceLocation.fromNamespaceAndPath(
+                Objects.requireNonNull(namespace, "namespace"),
+                Objects.requireNonNull(name, "name")
+            ),
+            "resource location"
+        );
     }
 
     protected final <I extends T, H extends DeferredHolder<T, I>> H track(H holder) {
@@ -66,16 +73,20 @@ public class DeferredRegister<T> {
 
     @SuppressWarnings("unchecked")
     private Registry<T> resolveRegistry() {
-        Registry<?> registry = BuiltInRegistries.REGISTRY.get(registryKey.location());
+        ResourceLocation registryLocation = Objects.requireNonNull(registryKey.location(), "registry location");
+        Registry<?> registry = BuiltInRegistries.REGISTRY.get(registryLocation);
         if (registry == null) {
-            throw new IllegalStateException("Unknown registry: " + registryKey.location());
+            throw new IllegalStateException("Unknown registry: " + registryLocation);
         }
         return (Registry<T>) registry;
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     private static <T> void registerValue(Registry<T> registry, ResourceLocation id, T value) {
-        Registry.register((Registry) registry, id, value);
+        Registry<T> nonNullRegistry = Objects.requireNonNull(registry, "registry");
+        ResourceLocation nonNullId = Objects.requireNonNull(id, "id");
+        T nonNullValue = Objects.requireNonNull(value, "value");
+        Registry.register((Registry) nonNullRegistry, nonNullId, nonNullValue);
     }
 
     public static final class Blocks extends DeferredRegister<Block> {
