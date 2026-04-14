@@ -50,13 +50,13 @@ loom {
 sourceSets {
     main {
         java {
-            srcDirs = ['src/main/java', '../src/main/java']
+            srcDirs = ['src/main/java']
             exclude 'net/redchujelly/cluttered/config/**'
             exclude 'net/redchujelly/cluttered/datagen/**'
             exclude 'net/redchujelly/cluttered/setup/ClutteredEvents.java'
             exclude 'net/redchujelly/cluttered/setup/ClutteredLootModifiers.java'
         }
-        resources.srcDirs = ['src/main/resources', '../src/main/resources', '../src/generated/resources']
+        resources.srcDirs = ['src/main/resources', 'src/generated/resources']
     }
 }
 
@@ -70,6 +70,8 @@ def fabricModProperties = [
         minecraft_version: minecraft_version
 ]
 
+def releaseJarVersion = (project.mod_version as String).replace('-fabric-dev', '') + '[Fabric]'
+
 processResources {
     inputs.properties(fabricModProperties)
 
@@ -81,6 +83,12 @@ processResources {
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
     options.release = 21
+}
+
+tasks.named('remapJar').configure {
+    archiveBaseName.set('Cluttered')
+    archiveVersion.set(releaseJarVersion)
+    archiveClassifier.set('')
 }
 
 publishing {
